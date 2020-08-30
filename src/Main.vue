@@ -34,7 +34,7 @@
         </nav>
     </header>
     <transition name="rlmove">
-        <div class="alert" :class="alertMode[alertCheck]" role="alert" v-if="showAlert">
+        <div class="alert" :class="alertMode[alertCheck]" role="alert" v-if="openAlert">
             {{showMsg}}
         </div>
     </transition>
@@ -45,7 +45,7 @@
         </transition>
     </section>
 
-    <Login  v-if="loginUser == null"></Login>
+    <Login v-if="loginUser == null"></Login>
 </div>
 </template>
 
@@ -59,7 +59,7 @@ export default {
     data() {
         return {
             loginUser:null,
-            showAlert: false,
+            openAlert: false,
             showMsg: '',
             alertCheck: '',
             alertMode: [
@@ -72,16 +72,11 @@ export default {
         }
     },
     beforeMount() {
-        //loginCheck
-        axios.get('/api/user').then(res => {
-            const data = res.data;
-            if(data.success)
-                this.loginUser = data.user;
-        });
+        this.checkLogin();
     },
     methods: {
-        openAlert(msg,check) {
-            this.showAlert = true;
+        showAlert(msg,check) {
+            this.openAlert = true;
             this.showMsg = msg;
             if(check === 'success') this.alertCheck = 0;
             else if(check === 'warning') this.alertCheck = 1;
@@ -89,11 +84,20 @@ export default {
             else if (check === 'info') this.alertCheck = 3;
 
             setTimeout(() => {
-                this.showAlert = false;
+                this.openAlert = false;
             }, 2000);
         },
         setLogin(user) {
             this.loginUser = user;
+            console.log(user);
+        },
+        checkLogin() {
+            axios.get('/api/user').then(res => {
+                const data = res.data;
+                if(data.success) {
+                    this.loginUser = data.user;
+                }
+            });
         },
         logout() {
             axios.delete('/api/user').then(res => {
@@ -101,7 +105,7 @@ export default {
                 if(data.success) {
                     this.loginUser = null;
                     swal.fire('알림',data.msg, 'success');
-                    this.$router.push('/');
+                    // this.$router.push('/');
                 }
             });
         },
@@ -131,5 +135,12 @@ export default {
     .rlmove-enter, .rlmove-leave-to {
         opacity: 0;
         transform: translateX(100%);
+    }
+    .box {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    }
+    .box::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera*/
     }
 </style>

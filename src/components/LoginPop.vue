@@ -24,7 +24,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <button class="btn btn-primary btn-block btn-lg" @click.prevent="login" data-dismiss="modal">Sign In</button>
+                                <button class="btn btn-primary btn-block btn-lg" @click.prevent="loginProcess" data-dismiss="modal">Sign In</button>
                             </div>
                         </form>
                     </div>
@@ -49,11 +49,11 @@ export default {
     methods: {
         loginProcess() {
             if(this.inputData.id.trim() === '' || this.inputData.pass.trim() === '') {
-                this.$parent.showAlert('필수값이 공백입니다.','warning');
+                this.$parent.showAlert('필수값이 공백입니다.','danger');
                 return;
             }
             const {id, pass} = this.inputData;
-            axios.pos('/api/user', {id,pass}).then(res => {
+            axios.post('/api/user', {id,pass}).then(res => {
                 const data = res.data;
                 if(data.success) {
                     this.$parent.showAlert(data.msg,'success');

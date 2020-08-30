@@ -1,0 +1,32 @@
+<template>
+    <div>
+        {{movie}}
+    </div>
+</template>
+
+<script>
+export default {
+    name:'movie-view-com',
+    props:['code'],
+    data() {
+        return {
+            movie: {}
+        }
+    },
+    beforeMount() {
+        axios.get(`/api/movie/view?code=${this.code}`).then(res => {
+            console.log(this.code);
+            const data = res.data;
+            if(data.success) {
+                this.movie = data.list;
+            }else {
+                this.$parent.showAlert(`${this.code}를 불러오지 못하였습니다.`, 'warning');
+            }
+        });
+    }
+}
+</script>
+
+<style>
+
+</style>
