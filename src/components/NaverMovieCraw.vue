@@ -2,7 +2,7 @@
     <div>
         <div class="row">
             <div class="col-md-10">
-                <h1>영화 크롤링</h1>
+                <h1 class="d-flex justify-content-center">영화 크롤링</h1>
             </div>
         </div>
         <div class="row justify-content-center" style="margin:20px 0px;">
@@ -29,14 +29,14 @@
                             <th scope="col">개봉년도</th>
                         </tr>
                     </thead>
-                    <tbody v-for="(item,i) in list" :key="i">
-                        <tr>
+                    <transition-group tag="tbody" name="sc">
+                        <tr v-for="(item,i) in list" :key="i">
                             <th scope="row">{{i+1}}</th>
                             <td><router-link :to="`/api/movie/view/${item.code}`">{{item.code}}</router-link></td>
                             <td>{{item.title}}</td>
                             <td>{{item.year}}</td>
                         </tr>
-                    </tbody>
+                    </transition-group>
                 </table>
             </div>
         </div>
@@ -85,5 +85,17 @@ export default {
 </script>
 
 <style scoped>
+    .sc-enter-active, .sc-leave-active {
+        transition: opacity 0.5s, transform 0.5s;
+    }
 
+    .sc-enter  {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+
+    .sc-leave-to{
+        opacity: 0;
+        transform: translateY(-100%);
+    }
 </style>

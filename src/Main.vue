@@ -40,7 +40,7 @@
     </transition>
 
     <section class="content">
-        <transition name="sc" mode="out-in">
+        <transition name="sc" mode="out-in" tag='p'>
             <router-view></router-view>
         </transition>
     </section>
@@ -120,12 +120,12 @@ export default {
 
     .sc-enter  {
         opacity: 0;
-        transform: translateX(100%);
+        transform: translateY(100%);
     }
 
     .sc-leave-to{
         opacity: 0;
-        transform: translateX(-100%);
+        transform: translateY(-100%);
     }
 
     .rlmove-enter-active, .rlmove-leave-active {
@@ -135,12 +135,5 @@ export default {
     .rlmove-enter, .rlmove-leave-to {
         opacity: 0;
         transform: translateX(100%);
-    }
-    .box {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-    }
-    .box::-webkit-scrollbar {
-        display: none; /* Chrome, Safari, Opera*/
     }
 </style>

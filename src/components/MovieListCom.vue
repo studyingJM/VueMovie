@@ -1,19 +1,17 @@
 <template>
     <div>
-        <h1>스크롤 로더 연습</h1>
-        <div>
-            <div class="images-item" v-for="(list,index) of list" :key="index">
-                <div class="images-card">
-                    <img class="images-card__image" :src="list.image" @load="masks.push(index)">
-                    <div class="images-card__mask" :style="{'background-color':list.title}" v-if="!masks.includes(index)"></div>
-                </div>
+        <h1 class="d-flex justify-content-center">영화 목록</h1>
+        <div class="row d-flex flex-wrap justify-content-center mt-2">
+            <div class="col-10">
+                <transition-group name="sc" tag="div" class="card-list">>
+                <!-- <div class="card-list"> -->
+                    <movie-item v-for="item in list" :key="item.code" :item="item"></movie-item>
+                <!-- </div> -->
+                </transition-group>
             </div>
         </div>
-        <div class="copyright-container" v-if="loadMore">
-            <h1>끝 입니다만 ?????? 더이상 존재 하지않는다구 오이</h1>
-        </div>
-        <scroll-loader :loader-method="getMovie" :loader-disable="loadMore">
-            <!--   You can replace the default loading animation with slot here. -->
+        <scroll-loader :loader-method="getMovie" :loader-enable="loadMore">
+            <div v-if="list.length > 0">Loading...</div>
         </scroll-loader>
     </div>
 </template>
@@ -29,39 +27,26 @@ export default {
     data() {
         return {
             loadMore:false,
-            page: 1,
-            pageSize: 10,
+            page: 0,
+            pageSize: 50,
             list: [],
-            masks: []
         }
-    },
-    beforeMount() {
-        // axios.get('https://api.unsplash.com/photos').then( res => {
-        //     const data = res.data;
-        //     if(data.success) {
-        //         this.list = data.data;
-        //     }
-        // });
     },
     methods: {
         getMovie() {
-            axios.get('/api/movie', {
+            axios.post('/api/movie', {
                 params: {
                     page: this.page++,
                     per_page:this.pageSize,
                 }
             }).then(res => {
-                res.data.data && (this.list = [...this.list, ...res.data.data])
+                const data = res.data;
+                res.data.list && (this.list = [...this.list, ...res.data.list]);
             }).catch(err => {
                 console.log(err)
             });
-        }
+        },
     },
-    watch: {
-        page (value) {
-            this.loadMore = value > 10
-        }
-    }
 }
 </script>
 
@@ -73,4 +58,19 @@ export default {
         grid-auto-rows: 150px;
         margin-bottom: 20px;
     }
+
+    .sc-enter-active, .sc-leave-active {
+        transition: opacity 0.5s, transform 0.5s;
+    }
+
+    .sc-enter  {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+
+    .sc-leave-to{
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+
 </style>

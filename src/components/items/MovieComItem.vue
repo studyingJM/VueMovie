@@ -1,5 +1,5 @@
 <template>
-    <div class="card" @click='view'>
+    <div class="card" @click='view' >
         <form>
             <div class="poster"><img :src="item.image" alt=""></div>
                 <div class="details">
