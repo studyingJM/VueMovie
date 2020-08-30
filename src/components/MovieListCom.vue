@@ -1,16 +1,20 @@
 <template>
     <div>
-        <h1>영화 목록</h1>
-        <div class="row d-flex flex-wrap justify-content-center mt-2">
-            <div class="col-10">
-                <div class="card-list">
-                    <movie-item v-for="item in list" :key="item.code" :item="item"></movie-item>
+        <h1>스크롤 로더 연습</h1>
+        <div>
+            <div class="images-item" v-for="(list,index) of list" :key="index">
+                <div class="images-card">
+                    <img class="images-card__image" :src="list.image" @load="masks.push(index)">
+                    <div class="images-card__mask" :style="{'background-color':list.title}" v-if="!masks.includes(index)"></div>
                 </div>
-                <!-- <scroll-loader :loader-method="getMovie" :loader-enable="loadMore">
-                    <div>Loading...</div>
-                </scroll-loader> -->
             </div>
         </div>
+        <div class="copyright-container" v-if="loadMore">
+            <h1>끝 입니다만 ?????? 더이상 존재 하지않는다구 오이</h1>
+        </div>
+        <scroll-loader :loader-method="getMovie" :loader-disable="loadMore">
+            <!--   You can replace the default loading animation with slot here. -->
+        </scroll-loader>
     </div>
 </template>
 
@@ -24,14 +28,15 @@ export default {
     },
     data() {
         return {
-            loadMore:true,
+            loadMore:false,
             page: 1,
-            pageSize: 9,
+            pageSize: 10,
             list: [],
+            masks: []
         }
     },
     beforeMount() {
-        // axios.get('/api/movie').then( res => {
+        // axios.get('https://api.unsplash.com/photos').then( res => {
         //     const data = res.data;
         //     if(data.success) {
         //         this.list = data.data;
@@ -39,23 +44,23 @@ export default {
         // });
     },
     methods: {
-        // getMovie() {
-        //     axios.get('/api/movie', {
-        //         params: {
-        //             page: this.page++,
-        //             per_page: this.pageSize,
-        //         }
-        //     }).then(res => {
-        //         const data = res.data;
-        //         this.list.concat(data.data);
-        //         data.data.length < this.pageSize && (this.loadMore = false)
-        //     }).catch(error => {
-        //         console.log(err);
-        //     });
-        // }
+        getMovie() {
+            axios.get('/api/movie', {
+                params: {
+                    page: this.page++,
+                    per_page:this.pageSize,
+                }
+            }).then(res => {
+                res.data.data && (this.list = [...this.list, ...res.data.data])
+            }).catch(err => {
+                console.log(err)
+            });
+        }
     },
-    mounted() {
-        this.getMovie();
+    watch: {
+        page (value) {
+            this.loadMore = value > 10
+        }
     }
 }
 </script>
