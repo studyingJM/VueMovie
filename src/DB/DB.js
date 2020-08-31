@@ -2,7 +2,6 @@ const mysql = require('mysql');
 const {Builder, By, Key, until} = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs');
-const { dir } = require('console');
 
 const info = {
     user:'kjimin2123',
@@ -10,6 +9,7 @@ const info = {
     host:'gondr.asuscomm.com',
     database:'kjimin2123'
 };
+//puty port : 9800z
 
 const con = mysql.createConnection(info);
 

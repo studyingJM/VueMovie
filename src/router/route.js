@@ -4,7 +4,6 @@ import Router from 'vue-router';
 import MovieListCom from '@/components/MovieListCom'
 import RegisterCom from '@/components/RegisterCom'
 import MovieViewCom from '@view/MovieViewCom'
-import WriteCom from '@/components/WriteCom'
 import NaverCom from '@/components/NaverMovieCraw'
 
 Vue.use(Router);
@@ -32,17 +31,6 @@ export default new Router({
             path: '/crawMovie',
             name: 'movie-craw-page',
             component: NaverCom,
-        },
-        {
-            path: '/write',
-            name:'write-page',
-            component: WriteCom
-        },
-        {
-            path: '/mod:id',
-            name:'mod-page',
-            component:WriteCom,
-            props:true
         },
     ]
 });

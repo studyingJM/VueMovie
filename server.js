@@ -9,7 +9,7 @@ const app = new express();
 const server = http.createServer(app);
 const cookieSecret = "kjimin2123";
 
-app.set('port',9060);
+app.set('port',32000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 

@@ -1,16 +1,21 @@
 <template>
     <div>
         <h1 class="d-flex justify-content-center">영화 목록</h1>
+        <div class="row">
+            <div class="col-10 offset-1">
+                <input type="search" v-model="word" name="" placeholder="Search for..." class="search__field">                    
+            </div>
+        </div>
         <div class="row d-flex flex-wrap justify-content-center mt-2">
             <div class="col-10">
                 <transition-group name="sc" tag="div" class="card-list">>
                 <!-- <div class="card-list"> -->
-                    <movie-item v-for="item in list" :key="item.code" :item="item"></movie-item>
+                    <movie-item v-for="item in filterList" :key="item.code" :item="item"></movie-item>
                 <!-- </div> -->
                 </transition-group>
             </div>
         </div>
-        <scroll-loader :loader-method="getMovie" :loader-enable="loadMore" v-if="loadMore != true" >
+        <scroll-loader :loader-method="getMovie" :loader-enable="loadMore">
             <!-- <div v-if="list.length > 0">Loading...</div> -->
         </scroll-loader>
     </div>
@@ -30,6 +35,12 @@ export default {
             page: 0,
             pageSize: 50,
             list: [],
+            word:''
+        }
+    },
+    computed:{
+        filterList(){
+            return this.list.filter(x => x.title.includes(this.word) );
         }
     },
     methods: {
@@ -41,13 +52,12 @@ export default {
                 }
             }).then(res => {
                 const data = res.data;
-                // this.list = [...data.list];
-                data.list && (this.list = [...this.list, ...data.list]);
                 if(data.list.length < 20) {
                     this.loadMore = true;
                 }
+                data.list && (this.list = [...this.list, ...data.list]);
             }).catch(err => {
-                console.log(err)
+                console.log(err);
             });
         },
     },

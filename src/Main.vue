@@ -9,19 +9,9 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <router-link class="nav-link" to="/fboard">자유게시판</router-link>
-                    </li>
-                    <li class="nav-item">
                         <router-link class="nav-link" to="/crawMovie">영화 크롤링</router-link>
                     </li>
-                </ul>
-                
-                <!-- <form class="form-inline mx-2 my-2 my-lg-0">
-                    <div class="search__wrapper">
-                        <input type="search" name="" placeholder="Search for..." class="search__field">
-                        <button type="submit" class="fa fa-search search__icon"></button>
-                    </div>
-                </form> -->
+                </ul>                
 
                 <div class="nav-item" v-if="loginUser == null">
                     <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#myModal">Login</button>
@@ -87,16 +77,11 @@ export default {
                 this.openAlert = false;
             }, 2000);
         },
-        setLogin(user) {
-            this.loginUser = user;
-            console.log(user);
-        },
+        setLogin(user) { this.loginUser = user; },
         checkLogin() {
             axios.get('/api/user').then(res => {
                 const data = res.data;
-                if(data.success) {
-                    this.loginUser = data.user;
-                }
+                if(data.success) this.loginUser = data.user;
             });
         },
         logout() {
