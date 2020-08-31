@@ -1,6 +1,6 @@
 <template>
     <div>
-        {{movie}}
+        <img :src="`/imgs/${code}.jpeg`" alt="영화 정보">
     </div>
 </template>
 
@@ -15,7 +15,6 @@ export default {
     },
     beforeMount() {
         axios.get(`/api/movie/view?code=${this.code}`).then(res => {
-            console.log(this.code);
             const data = res.data;
             if(data.success) {
                 this.movie = data.list;

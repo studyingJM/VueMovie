@@ -10,8 +10,8 @@
                 </transition-group>
             </div>
         </div>
-        <scroll-loader :loader-method="getMovie" :loader-enable="loadMore">
-            <div v-if="list.length > 0">Loading...</div>
+        <scroll-loader :loader-method="getMovie" :loader-enable="loadMore" v-if="loadMore != true" >
+            <!-- <div v-if="list.length > 0">Loading...</div> -->
         </scroll-loader>
     </div>
 </template>
@@ -33,7 +33,7 @@ export default {
         }
     },
     methods: {
-        getMovie() {
+        async getMovie() {
             axios.post('/api/movie', {
                 params: {
                     page: this.page++,
@@ -41,7 +41,11 @@ export default {
                 }
             }).then(res => {
                 const data = res.data;
-                res.data.list && (this.list = [...this.list, ...res.data.list]);
+                // this.list = [...data.list];
+                data.list && (this.list = [...this.list, ...data.list]);
+                if(data.list.length < 20) {
+                    this.loadMore = true;
+                }
             }).catch(err => {
                 console.log(err)
             });
@@ -57,7 +61,7 @@ export default {
         grid-template-columns: repeat(10, 1fr);
         grid-auto-rows: 150px;
         margin-bottom: 20px;
-    }
+    }   
 
     .sc-enter-active, .sc-leave-active {
         transition: opacity 0.5s, transform 0.5s;

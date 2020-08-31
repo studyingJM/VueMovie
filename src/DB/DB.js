@@ -1,6 +1,8 @@
 const mysql = require('mysql');
 const {Builder, By, Key, until} = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
+const fs = require('fs');
+const { dir } = require('console');
 
 const info = {
     user:'kjimin2123',
@@ -57,10 +59,6 @@ async function movieInfo(req,res,{year,page}) {
                 else continue;
             }
 
-            //개봉년도
-            // let date = info.match(/ *\([^)]*\) */g).join('').split(regExp).join('').trim();
-            data.year = year;
-
             //등급
             if(info.indexOf("전체") > -1) data.grade = 7;
             else if(info.indexOf("12세") > -1) data.grade = 12;
@@ -75,8 +73,23 @@ async function movieInfo(req,res,{year,page}) {
         for(let i = 0; i < list.length; i++) {
             await driver.get(`https://movie.naver.com/movie/bi/mi/basic.nhn?code=${list[i].code}`);
             let movieInfo = await driver.findElement(By.css('.mv_info_area'));
+            let path = `public/imgs/${list[i].code}.jpeg`;
+            await driver.findElement(By.xpath('//*[@id="content"]/div[1]/div[2]/div[1]')).takeScreenshot().then(
+                function(image, err) {
+                    fs.writeFile(path, image, 'base64', (err) => { if(err != null) return;});
+                }
+            );
+            let day = await driver.findElement(By.xpath('//*[@id="content"]/div[1]/div[2]/div[1]/dl/dd[1]/p')).getText();
+            let days = day.match(/\.[0-9]+(\.[0-9]+)*/);
+
+            if(days != null) list[i].date = year + days.splice(0,1).join('').split('.').join('-');
+            else list[i].date = year;
+
+            list[i].info = `/img/${list[i].code}.jpeg`
             list[i].image = await movieInfo.findElement(By.css('.poster img')).getAttribute("src");
         }
+
+        console.log(list);
         
         list.forEach(item => {
             movieDB(item);
@@ -92,14 +105,14 @@ async function movieInfo(req,res,{year,page}) {
     }
 }
 
-async function movieDB({code,title,subtitle,image,grade,genre,year}) {
+async function movieDB({code,info,title,subtitle,image,grade,genre,date}) {
     try{
         let result = await query('SELECT * FROM movielist WHERE code = ?', [code]);
         if(result.length > 0) {
             return;
         }else {
-            let sql = "INSERT INTO movielist(code,title,subtitle,image,grade,genre,year) VALUES(?,?,?,?,?,?,?)";
-            result = await query(sql,[code,title,subtitle,image,grade,genre,year]);
+            let sql = "INSERT INTO movielist(code,info,title,subtitle,image,grade,genre,date) VALUES(?,?,?,?,?,?,?,?)";
+            result = await query(sql,[code,info,title,subtitle,image,grade,genre,date]);
         }
         return;
     }catch(err) {

@@ -54,7 +54,7 @@ app.delete('/api/user', (req,res) => {
 });
 
 app.get('/api/movie', async (req,res) => {
-    let data = await query('SELECT * FROM movielist ORDER BY code DESC', []);
+    let data = await query('SELECT * FROM movielist ORDER BY date DESC', []);
 
     res.json({msg:'성공적으로 불러왔습니다.',success:true,data}); 
 });
@@ -62,7 +62,7 @@ app.get('/api/movie', async (req,res) => {
 app.post('/api/movie', async (req,res) => {
     const data = req.body.params;
     let page = data.page * data.per_page;
-    let list = await query('SELECT * FROM movielist ORDER BY code DESC LIMIT ?,?',[page,data.per_page]);
+    let list = await query('SELECT * FROM movielist ORDER BY date DESC LIMIT ?,?',[page,data.per_page]);
     res.json({success:true, list});
 });
 

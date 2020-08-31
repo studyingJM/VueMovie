@@ -34,7 +34,7 @@
                             <th scope="row">{{i+1}}</th>
                             <td><router-link :to="`/api/movie/view/${item.code}`">{{item.code}}</router-link></td>
                             <td>{{item.title}}</td>
-                            <td>{{item.year}}</td>
+                            <td style="text-align:right; padding-right:30px">{{item.date}}</td>
                         </tr>
                     </transition-group>
                 </table>
@@ -58,12 +58,17 @@ export default {
     methods: {
         movieToDB() {
             const {year, page} = this.info;
-            if(year.trim() === '' || page.trim() === '') {
-                this.$parent.showAlert('필수값이 공백입니다.', 'danger');
+            let date = new Date().getFullYear();
+            if(date < year){
+                this.$parent.showAlert(`현재 (${date})년도 이하로만 불러올수있습니다.`,'danger');
                 return;
             }
             if(year <= 2000) {
                 this.$parent.showAlert('잘못된 년도입니다. (2000년 OVER)','warning');
+                return;
+            }
+            if(year.trim() === '' || page.trim() === '') {
+                this.$parent.showAlert('필수값이 공백입니다.', 'danger');
                 return;
             }
             this.$parent.showAlert('영화 정보를 불러오는중 입니다.', 'info');

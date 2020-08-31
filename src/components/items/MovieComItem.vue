@@ -1,9 +1,9 @@
 <template>
-    <div class="card" @click='view' >
+    <div class="card" @click='view'>
         <form>
             <div class="poster"><img :src="item.image" alt=""></div>
                 <div class="details">
-                    <h3>{{item.title}}<br><span>{{item.year}}</span></h3>
+                    <h3>{{item.title}}<br><span>{{item.date}}</span></h3>
                 <div class="rating">
                     <span v-if="item.rating > 0">{{item.rating}}/10</span>
                 </div>
