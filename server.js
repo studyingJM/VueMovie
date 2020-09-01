@@ -10,7 +10,7 @@ const server = http.createServer(app);
 const cookieSecret = "kjimin2123";
 
 app.set('port',32000);
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, './src/view'));
 app.set('view engine', 'ejs');
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -35,6 +35,7 @@ app.get('/api/user', (req,res) => {
     }
 });
 
+//로그인
 app.post('/api/user', async(req,res) => {
     const {id,pass} = req.body;
     let result = await query('SELECT * FROM users WHERE id = ? AND password = PASSWORD(?)', [id,pass]);
@@ -46,6 +47,7 @@ app.post('/api/user', async(req,res) => {
     }
 });
 
+//로그아웃
 app.delete('/api/user', (req,res) => {
     if(req.session.user !== undefined) {
         req.session.user = undefined;
@@ -53,12 +55,14 @@ app.delete('/api/user', (req,res) => {
     res.json({success:true, msg:'로그아웃되었습니다.'});
 });
 
+//모든 DB영화목록
 app.get('/api/movie', async (req,res) => {
     let data = await query('SELECT * FROM movielist ORDER BY date DESC', []);
 
     res.json({msg:'성공적으로 불러왔습니다.',success:true,data}); 
 });
 
+//페이지마다 가져올 영화목록
 app.post('/api/movie', async (req,res) => {
     const data = req.body.params;
     let page = data.page * data.per_page;
@@ -66,6 +70,7 @@ app.post('/api/movie', async (req,res) => {
     res.json({success:true, list});
 });
 
+//영화 View
 app.get('/api/movie/view', async(req,res) => {
     let code = req.query.code;
     try{
@@ -77,6 +82,7 @@ app.get('/api/movie/view', async(req,res) => {
     }
 });
 
+//영화 파싱
 app.get('/api/movie/craw', (req,res) => {
     const {year,page} = req.query;
     movieInfo(req,res,{year,page});

@@ -9,7 +9,7 @@ const info = {
     host:'gondr.asuscomm.com',
     database:'kjimin2123'
 };
-//puty port : 9800z
+//puty port : 9800
 
 const con = mysql.createConnection(info);
 
@@ -92,15 +92,12 @@ async function movieInfo(req,res,{year,page}) {
             list[i].info = `/img/${list[i].code}.jpeg`
             list[i].image = await movieInfo.findElement(By.css('.poster img')).getAttribute("src");
         }
-
-        console.log(list);
         
         list.forEach(item => {
             movieDB(item);
         });
 
-        res.json({msg:'영화 정보를 DB에 성공적으로 저장하였습니다.', success:true, list});
-        console.log(`등록 완료 ${page}번째 페이지`);
+        res.json({msg:`영화 ${page}페이지 정보를 DB에 성공적으로 저장하였습니다.`, success:true, list});
         driver.quit();
         return;
     }catch(err) {

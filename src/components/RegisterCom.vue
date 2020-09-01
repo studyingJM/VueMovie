@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div id="main" class="my-3">
+        <div class="my-3">
             <div class="row">
                 <div class="col-md-10">
                     <h1>회원가입</h1>
@@ -44,14 +44,6 @@ export default {
                 pass: '',
                 passc: ''
             },
-        }
-    },
-    beforeMount() {
-        if(this.$parent.loginUser != null) {
-            swal.fire('알림','이미 로그인중 입니다.','warning').then(res => {
-                this.$router.push('/');
-                return;
-            });
         }
     },
     methods: {

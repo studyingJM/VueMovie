@@ -15,8 +15,8 @@
                 </transition-group>
             </div>
         </div>
-        <scroll-loader :loader-method="getMovie" :loader-enable="loadMore">
-            <!-- <div v-if="list.length > 0">Loading...</div> -->
+        <scroll-loader :loader-method="getMovie" v-if="loadMore">
+            <!-- <div>Loading...</div> -->
         </scroll-loader>
     </div>
 </template>
@@ -31,7 +31,7 @@ export default {
     },
     data() {
         return {
-            loadMore:false,
+            loadMore:true,
             page: 0,
             pageSize: 50,
             list: [],
@@ -52,9 +52,11 @@ export default {
                 }
             }).then(res => {
                 const data = res.data;
-                if(data.list.length < 20) {
-                    this.loadMore = true;
+                if(this.list.length > 100 && this.loadMore == true) {
+                    this.list.splice(0,50);
+                    console.log(this.list);
                 }
+                if(data.list.length == 0) this.loadMore = false;
                 data.list && (this.list = [...this.list, ...data.list]);
             }).catch(err => {
                 console.log(err);

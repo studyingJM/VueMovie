@@ -8,7 +8,8 @@
                     <span v-if="item.rating > 0">{{item.rating}}/10</span>
                 </div>
                 <div class="tags">
-                    <span class="genre">{{item.genre}}</span>
+                    <span class="genre" v-if="item.grade != null">{{item.genre}} / {{item.grade}}</span>
+                    <span class="genre" v-else>{{item.genre}}</span>
                 </div>
             </div>
         </form>
@@ -25,8 +26,8 @@ export default {
         }
     },
     methods: {
-        view() { this.$router.push(`/api/movie/view/${this.item.code}`); }
-    }
+        view() { this.$router.push(`/api/movie/view/${this.item.code}`); },
+    },
 
 }
 </script>
