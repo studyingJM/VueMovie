@@ -59,6 +59,11 @@ export default {
         movieToDB() {
             const {year, page} = this.info;
             let date = new Date().getFullYear();
+            let yearC = year.match(/^[0-9]*$/);
+            if(yearC == null) {
+                this.$parent.showAlert('숫자만 입력가능합니다.');
+                return;
+            }
             if(date < year){
                 this.$parent.showAlert(`현재 (${date})년도 이하로만 불러올수있습니다.`,'danger');
                 return;
@@ -72,7 +77,7 @@ export default {
                 return;
             }
             this.$parent.showAlert('영화 정보를 불러오는중 입니다.', 'info');
-            axios.get(`/api/movie/craw?year=${year}&page=${page}`).then( res => {
+            axios.get(`/api/movie/craw?year=${yearC}&page=${page}`).then( res => {
                 const data = res.data;
                 if(data.success) {
                     this.$parent.showAlert(data.msg, 'success');

@@ -74,11 +74,15 @@ async function movieInfo(req,res,{year,page}) {
             await driver.get(`https://movie.naver.com/movie/bi/mi/basic.nhn?code=${list[i].code}`);
             let movieInfo = await driver.findElement(By.css('.mv_info_area'));
             let path = `public/imgs/${list[i].code}.jpeg`;
-            await driver.findElement(By.xpath('//*[@id="content"]/div[1]/div[2]/div[1]')).takeScreenshot().then(
-                function(image, err) {
-                    fs.writeFile(path, image, 'base64', (err) => { if(err != null) return;});
-                }
-            );
+            if(fs.existsSync(path)) {
+                continue;
+            }else {
+                await driver.findElement(By.xpath('//*[@id="content"]/div[1]/div[2]/div[1]')).takeScreenshot().then(
+                    function(image, err) {
+                        fs.writeFile(path, image, 'base64', (err) => { if(err != null) return;});
+                    }
+                );
+            }
             let day = await driver.findElement(By.xpath('//*[@id="content"]/div[1]/div[2]/div[1]/dl/dd[1]/p')).getText();
             let days = day.match(/\.[0-9]+(\.[0-9]+)*/);
 
