@@ -52,10 +52,7 @@ export default {
                 }
             }).then(res => {
                 const data = res.data;
-                if(this.list.length > 100 && this.loadMore == true) {
-                    this.list.splice(0,50);
-                    console.log(this.list);
-                }
+                if(this.list.length > 100 && this.loadMore == true) this.list.splice(0,50);
                 if(data.list.length == 0) this.loadMore = false;
                 data.list && (this.list = [...this.list, ...data.list]);
             }).catch(err => {
