@@ -58,7 +58,6 @@ app.delete('/api/user', (req,res) => {
 //모든 DB영화목록
 app.get('/api/movie', async (req,res) => {
     let data = await query('SELECT * FROM movielist ORDER BY date DESC', []);
-
     res.json({msg:'성공적으로 불러왔습니다.',success:true,data}); 
 });
 

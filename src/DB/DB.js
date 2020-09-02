@@ -25,7 +25,7 @@ function query(sql, data){
 async function movieInfo(req,res,{year,page}) {
     let driver = await new Builder()
         .forBrowser('chrome')
-        .setChromeOptions(new chrome.Options().headless())
+        // .setChromeOptions(new chrome.Options().headless())
         .build();
     
     let list = []; let data = new Object; let idx = 20;
@@ -45,7 +45,7 @@ async function movieInfo(req,res,{year,page}) {
 
             //제목
             let text = await elem.findElement(By.xpath(`//*[@id="old_content"]/ul/li[${i}]/a`)).getText();
-            data.title = text.split(/ *\([^)]*\) */g).join('');
+            data.title = text.split(/ *\([^)]*\) */g).join('').trim();
             let subtitle = text.match(/ *\([^)]*\) */g);
             if(subtitle !== null) data.subtitle = subtitle.join('').split(regExp).join('').trim();
             else data.subtitle = null;
@@ -71,18 +71,17 @@ async function movieInfo(req,res,{year,page}) {
 
         //이미지
         for(let i = 0; i < list.length; i++) {
+            let check = await query('SELECT * FROM movielist WHERE code = ?',list[i].code);
+            if(check.length > 0) continue;
+            
             await driver.get(`https://movie.naver.com/movie/bi/mi/basic.nhn?code=${list[i].code}`);
             let movieInfo = await driver.findElement(By.css('.mv_info_area'));
             let path = `public/imgs/${list[i].code}.jpeg`;
-            if(fs.existsSync(path)) {
-                continue;
-            }else {
-                await driver.findElement(By.xpath('//*[@id="content"]/div[1]/div[2]/div[1]')).takeScreenshot().then(
-                    function(image, err) {
-                        fs.writeFile(path, image, 'base64', (err) => { if(err != null) return;});
-                    }
-                );
-            }
+            await driver.findElement(By.xpath('//*[@id="content"]/div[1]/div[2]/div[1]')).takeScreenshot().then(
+            function(image, err) {
+                fs.writeFile(path, image, 'base64', (err) => { if(err != null) return;});
+                }
+            );
             let day = await driver.findElement(By.xpath('//*[@id="content"]/div[1]/div[2]/div[1]/dl/dd[1]/p')).getText();
             let days = day.match(/\.[0-9]+(\.[0-9]+)*/);
 

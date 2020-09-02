@@ -2,7 +2,7 @@
     <div>
         <div class="row">
             <div class="col-md-10">
-                <h1 class="d-flex justify-content-center">영화 크롤링</h1>
+                <h1>영화 크롤링</h1>
             </div>
         </div>
         <div class="row justify-content-center" style="margin:20px 0px;">

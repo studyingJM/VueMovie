@@ -2,11 +2,12 @@
     <div>
         <h1 class="d-flex justify-content-center">영화 목록</h1>
         <div class="row">
-            <div class="col-10 offset-1">
+            <div class="col-10 offset-1" v-if="list.length != 0">
                 <input type="search" v-model="word" name="" placeholder="Search for..." class="search__field">                    
             </div>
         </div>
-        <div class="row d-flex flex-wrap justify-content-center mt-2">
+        <h1 class="d-flex flex-wrap justify-content-center mt-2" v-if="list.length == 0">DB에 영화목록이 없습니다.</h1>
+        <div class="row d-flex flex-wrap justify-content-center mt-2" v-else>
             <div class="col-10">
                 <transition-group name="sc" tag="div" class="card-list">>
                 <!-- <div class="card-list"> -->
@@ -53,7 +54,7 @@ export default {
             }).then(res => {
                 const data = res.data;
                 if(this.list.length > 100 && this.loadMore == true) this.list.splice(0,50);
-                if(data.list.length == 0) this.loadMore = false;
+                if(data.list.length == 0 || this.list.length < 20) this.loadMore = false;
                 data.list && (this.list = [...this.list, ...data.list]);
             }).catch(err => {
                 console.log(err);

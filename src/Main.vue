@@ -61,9 +61,6 @@ export default {
             movieList:[]
         }
     },
-    beforeMount() {
-        this.checkLogin();
-    },
     methods: {
         showAlert(msg,check) {
             this.openAlert = true;
@@ -78,12 +75,6 @@ export default {
             }, 2000);
         },
         setLogin(user) { this.loginUser = user; },
-        checkLogin() {
-            axios.get('/api/user').then(res => {
-                const data = res.data;
-                if(data.success) this.loginUser = data.user;
-            });
-        },
         logout() {
             axios.delete('/api/user').then(res => {
                 const data = res.data;
